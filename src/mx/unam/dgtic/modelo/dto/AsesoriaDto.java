@@ -21,8 +21,7 @@ public class AsesoriaDto {
     private String observaciones;
     private List<ActividadDto> actividades;
 
-    public AsesoriaDto() {
-    }
+    public AsesoriaDto() { }
 
     @Override
     public boolean equals(Object obj) {

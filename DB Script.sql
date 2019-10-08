@@ -116,7 +116,7 @@ CREATE TABLE `asesorias`.`Actividad` (
   `asesoria` BIGINT(10) NOT NULL,
   `fecha` DATETIME NOT NULL,
   `estado` VARCHAR(16) NOT NULL,
-  `tecnico` VARCHAR(32) NOT NULL,
+  `tecnico` VARCHAR(32) NULL,
   `subtipo` TINYINT(3) NOT NULL,
   `observaciones` VARCHAR(256) NULL,
   PRIMARY KEY (`id`),
@@ -182,31 +182,33 @@ USE `Asesorias`;
 DROP procedure IF EXISTS `sp_UpdateUsuarioRoles`;
 
 DELIMITER $$
-USE `Asesorias`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateUsuarioRoles`(IN p_username VARCHAR(32), IN p_roles VARCHAR(32))
 BEGIN    
 	SET @delete_sql = CONCAT('DELETE FROM Usuario_Rol WHERE usuario = \'', p_username, '\'', IF(p_roles IS NULL OR LENGTH(p_roles) = 0, '', CONCAT(' AND rol NOT IN(', p_roles ,')') ) );
-	SET @insert_sql = 'INSERT IGNORE INTO Usuario_Rol (usuario,rol) VALUES ';
 
 	PREPARE delStmt FROM @delete_sql;
     EXECUTE delStmt;
 	DEALLOCATE PREPARE delStmt;
 
-	WHILE LENGTH(p_roles) > 0 DO
-		SET @rol = SUBSTRING_INDEX(p_roles,',',1);
-		SET @insert_sql = CONCAT(@insert_sql, '(\'',p_username,'\',',@rol,'), ');
-		SET p_roles = SUBSTR(p_roles, LENGTH(@rol) + 2, LENGTH(p_roles) - LENGTH(@rol) - 1);
-	END WHILE;
-	SET @insert_sql = SUBSTR(@insert_sql, 1, LENGTH(@insert_sql) - 2);
-    
-	PREPARE insStmt FROM @insert_sql;
-	EXECUTE insStmt;
-	DEALLOCATE PREPARE insStmt;
+	IF p_roles IS NOT NULL AND LENGTH(p_roles) > 0 THEN
+		SET @insert_sql = 'INSERT IGNORE INTO Usuario_Rol (usuario,rol) VALUES ';
+		
+		WHILE LENGTH(p_roles) > 0 DO
+			SET @rol = SUBSTRING_INDEX(p_roles,',',1);
+			SET @insert_sql = CONCAT(@insert_sql, '(\'',p_username,'\',',@rol,'), ');
+			SET p_roles = SUBSTR(p_roles, LENGTH(@rol) + 2, LENGTH(p_roles) - LENGTH(@rol) - 1);
+		END WHILE;
+		SET @insert_sql = SUBSTR(@insert_sql, 1, LENGTH(@insert_sql) - 2);
+		
+		PREPARE insStmt FROM @insert_sql;
+		EXECUTE insStmt;
+		DEALLOCATE PREPARE insStmt;
+    END IF;
     
     SELECT R.* FROM Rol R JOIN Usuario_Rol UR ON(UR.rol = R.id) WHERE UR.usuario = p_username;
 END$$
-
 DELIMITER ;
+
 
 -- Procedimiento sp_DeleteUsuario
 USE `Asesorias`;
@@ -266,3 +268,34 @@ BEGIN
     DELETE FROM SubtipoAsesoria WHERE id = subtipo_id  AND NOT EXISTS(SELECT * FROM Actividad WHERE subtipo = subtipo_id);
 END$$
 DELIMITER ;
+
+
+-- Procedimiento sp_DeleteSolicitante
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteSolicitante`(IN solicitante_id INT)
+BEGIN
+	UPDATE Solicitante SET habilitado = 0 WHERE id = solicitante_id AND EXISTS(SELECT * FROM Asesoria WHERE solicitante = solicitante_id);
+    SELECT S.*, T.descripcion, T.habilitado tipo_habilitado FROM Solicitante S JOIN TipoSolicitante T ON(T.nombre = S.tipo) WHERE S.id = solicitante_id;
+    DELETE FROM Solicitante WHERE id = solicitante_id AND NOT EXISTS(SELECT * FROM Asesoria WHERE solicitante = solicitante_id);
+END$$
+DELIMITER ;
+
+-- Procedimiento sp_DeleteAsesoria
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteAsesoria`(IN asesoria_id BIGINT)
+BEGIN
+	DELETE FROM Actividad WHERE asesoria = asesoria_id;
+    SELECT A.*, S.nombre solicitante_nombre, S.apellidos solicitante_apellidos, S.tipo solicitante_tipo, T.descripcion tipo_descripcion, T.habilitado tipo_habilitado, S.contacto solicitante_contacto, S.habilitado solicitante_habilitado, P.descripcion piso_descripcion, P.habilitado piso_habilitado FROM Asesoria A JOIN Solicitante S ON(S.id = A.solicitante) JOIN TipoSolicitante T ON(T.nombre = S.tipo) JOIN Piso P ON(P.id = A.piso) WHERE A.id = asesoria_id;
+    DELETE FROM Asesoria WHERE id = asesoria_id;
+END$$
+DELIMITER ;
+
+-- Procedimiento sp_DeleteActividad
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteActividad`(IN actividad_id BIGINT)
+BEGIN
+	SELECT A.*, U.*,S.tipo, S.nombre subtipo_nombre, S.descripcion subtipo_descripcion, S.habilitado subtipo_habilitado, T.nombre tipo_nombre, T.descripcion tipo_descripcion, T.habilitado tipo_habilitado FROM Actividad A JOIN SubtipoAsesoria S ON(S.id = A.subtipo) JOIN TipoAsesoria T ON(T.id = S.tipo) LEFT JOIN Usuario U ON(U.username = A.tecnico) WHERE A.id = actividad_id;
+    DELETE FROM Actividad WHERE id = actividad_id;
+END$$
+DELIMITER ;
+

@@ -27,14 +27,14 @@ public interface SolicitanteDao {
      * @param id
      * @return 
      */
-    public abstract SolicitanteDto eliminar(short id);
+    public abstract SolicitanteDto eliminar(int id);
     
     /**
      * Obtiene el Solicitante con el id solicitado
      * @param id
      * @return 
      */
-    public abstract SolicitanteDto obtener(short id);
+    public abstract SolicitanteDto obtener(int id);
     
     /**
      * Obtiene la lista de todos los Solicitantes almacenados

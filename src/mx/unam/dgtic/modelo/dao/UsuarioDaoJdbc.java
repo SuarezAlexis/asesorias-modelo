@@ -76,7 +76,7 @@ public class UsuarioDaoJdbc implements UsuarioDao {
         String roles = "";
         for(RolDto r : u.getRoles()) {
             roles += r.getId() + ",";
-        } roles = roles.substring(0,roles.length()-1);
+        } roles = roles.substring(0,Math.max(0,roles.length()-1));
         try {
             conn = userConn != null? userConn : Database.getInstance().getConnection();
             ps = conn.prepareCall(UPSERT_SQL);

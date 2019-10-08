@@ -27,14 +27,14 @@ public interface AsesoriaDao {
      * @param id
      * @return 
      */
-    public abstract AsesoriaDto eliminar(short id);
+    public abstract AsesoriaDto eliminar(long id);
     
     /**
      * Obtiene el Asesoria con el id solicitado
      * @param id
      * @return 
      */
-    public abstract AsesoriaDto obtener(short id);
+    public abstract AsesoriaDto obtener(long id);
     
     /**
      * Obtiene la lista de todos los Asesorias almacenados
@@ -42,9 +42,4 @@ public interface AsesoriaDao {
      */
     public abstract List<AsesoriaDto> obtenerTodos();
     
-    /**
-     * Obtiene la lista de todos los Asesorias habilitados
-     * @return 
-     */
-    public abstract List<AsesoriaDto> obtenerHabilitados();
 }

@@ -5,6 +5,7 @@
  */
 package  mx.unam.dgtic.modelo.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,7 +22,7 @@ public class UsuarioDto {
     private List<RolDto> roles;
     private boolean habilitado;
 
-    public UsuarioDto() { }
+    public UsuarioDto() { roles = new ArrayList<RolDto>(); }
 
     @Override
     public String toString() {
