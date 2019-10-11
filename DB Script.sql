@@ -1,6 +1,6 @@
---Creación de la base de datos Asesorias
+-- Creación de la base de datos Asesorias
 CREATE SCHEMA `Asesorias` ;
-
+USE Asesorias;
 -- Tabla Rol
 CREATE TABLE `Asesorias`.`Rol` (
   `id` TINYINT NOT NULL AUTO_INCREMENT,
@@ -24,7 +24,7 @@ CREATE TABLE `Asesorias`.`Usuario_Rol` (
   `usuario` VARCHAR(32) NOT NULL,
   `rol` TINYINT NOT NULL,
   PRIMARY KEY (`usuario`, `rol`),
-  INDEX `UsuarioRol_Ref_Rol_idx` (`rol` ASC) VISIBLE,
+  INDEX `UsuarioRol_Ref_Rol_idx` (`rol` ASC),
   CONSTRAINT `UsuarioRol_Ref_Usuario`
     FOREIGN KEY (`usuario`)
     REFERENCES `Asesorias`.`Usuario` (`username`)
@@ -88,7 +88,7 @@ CREATE TABLE `Asesorias`.`Asesoria` (
     ON UPDATE NO ACTION);
 	
 -- Tabla TipoAsesoria
-CREATE TABLE `TipoAsesoria` (
+CREATE TABLE `Asesorias`.`TipoAsesoria` (
   `id` tinyint(3) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(32) NOT NULL,
   `descripcion` varchar(128) DEFAULT NULL,
@@ -98,7 +98,7 @@ CREATE TABLE `TipoAsesoria` (
 
   
 -- Tabla SubtipoAsesoria
-CREATE TABLE `SubtipoAsesoria` (
+CREATE TABLE `Asesorias`.`SubtipoAsesoria` (
   `id` tinyint(3) NOT NULL AUTO_INCREMENT,
   `tipo` tinyint(3) NOT NULL,
   `nombre` varchar(32) NOT NULL,
@@ -107,11 +107,11 @@ CREATE TABLE `SubtipoAsesoria` (
   PRIMARY KEY (`id`),
   KEY `Subtipo_Ref_Tipo_idx` (`tipo`),
   CONSTRAINT `Subtipo_Ref_Tipo` FOREIGN KEY (`tipo`) REFERENCES `tipoasesoria` (`id`)
-)
+);
 
 	
 -- Tabla Actividad
-CREATE TABLE `asesorias`.`Actividad` (
+CREATE TABLE `Asesorias`.`Actividad` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `asesoria` BIGINT(10) NOT NULL,
   `fecha` DATETIME NOT NULL,
