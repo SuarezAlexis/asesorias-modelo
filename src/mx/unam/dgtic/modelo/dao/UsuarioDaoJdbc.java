@@ -147,7 +147,7 @@ public class UsuarioDaoJdbc implements UsuarioDao {
         ResultSet rs = null;
         try {
             conn = userConn != null? userConn : Database.getInstance().getConnection();
-            ps = conn.prepareStatement(SELECT_SQL + " WHERE username = ? AND password = ? AND habilitado = 1");
+            ps = conn.prepareStatement(SELECT_SQL + " WHERE username = ? AND password = ? AND U.habilitado = 1");
             ps.setString(1, username);
             ps.setString(2, password);
             rs = ps.executeQuery();
