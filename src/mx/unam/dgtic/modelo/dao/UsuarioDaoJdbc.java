@@ -151,7 +151,8 @@ public class UsuarioDaoJdbc implements UsuarioDao {
             ps.setString(1, username);
             ps.setString(2, password);
             rs = ps.executeQuery();
-            rs.next();
+            if( rs.next() == false)
+                return null;
             u = resultSetMapper(rs);
             do {
                 u.getRoles().add(rolResultSetMapper(rs));
@@ -178,7 +179,8 @@ public class UsuarioDaoJdbc implements UsuarioDao {
             ps = conn.prepareStatement(SELECT_SQL + " WHERE username = ?");
             ps.setString(1, username);
             rs = ps.executeQuery();
-            rs.next();
+            if( rs.next() == false)
+                return null;
             u = resultSetMapper(rs);
             do {
                 u.getRoles().add(rolResultSetMapper(rs));
