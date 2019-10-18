@@ -138,6 +138,15 @@ CREATE TABLE `Asesorias`.`Actividad` (
     REFERENCES `asesorias`.`subtipoasesoria` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+
+--Tabla UrlItem
+CREATE TABLE `UrlItem` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `valor` varchar(45) NOT NULL,
+  `habilitado` bit(1) NOT NULL DEFAULT b'0',
+  `etiqueta` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`)
+);
 	
 
 -- Procedimiento sp_DeleteRol
