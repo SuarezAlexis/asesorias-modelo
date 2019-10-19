@@ -147,6 +147,23 @@ CREATE TABLE `UrlItem` (
   `etiqueta` varchar(45) NOT NULL,
   PRIMARY KEY (`id`)
 );
+
+
+--Datos de tabla Rol
+INSERT INTO Rol(nombre,descripcion,habilitado) VALUES('Técnico','',1);
+INSERT INTO Rol(nombre,descripcion,habilitado) VALUES('Secretaria','',1);
+INSERT INTO Rol(nombre,descripcion,habilitado) VALUES('Administrativo','',1);
+INSERT INTO Rol(nombre,descripcion,habilitado) VALUES('Administrador','',1);
+
+--Datos de tabla UrlItems
+INSERT INTO UrlItem(valor,etiqueta,habilitado)
+VALUES
+('usuarios','Usuarios',1),
+('roles','Roles',1),
+('asesorias','Asesorías',1),
+('solicitantes','Solicitantes',1),
+('tiposSolicitante','Tipos de solicitante',1),
+('tiposAsesoria','Tipos de asesoría',1);
 	
 
 -- Procedimiento sp_DeleteRol
