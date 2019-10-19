@@ -21,7 +21,7 @@ import java.sql.Statement;
 class ConexionMySql implements Conexion {
     private static ConexionMySql instance;
     private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/Asesorias?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/Asesorias";
     private static final String JDBC_USER = "root";
     private static final String JDBC_PASS = "mysql";
     private Driver driver = null;

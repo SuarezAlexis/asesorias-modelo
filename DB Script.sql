@@ -230,7 +230,7 @@ BEGIN
 	START TRANSACTION;
 		DELETE FROM Usuario_Rol WHERE usuario = p_username;
         UPDATE Usuario SET habilitado = 0 WHERE username = p_username AND EXISTS(SELECT tecnico FROM Actividad WHERE tecnico = p_username);    
-        SELECT * FROM Usuario WHERE username = p_username;
+        SELECT * FROM Usuario WHERE p_username = p_username;
 		DELETE FROM Usuario WHERE username = username AND NOT EXISTS (SELECT tecnico FROM Actividad WHERE tecnico = p_username);    
 	COMMIT;
 END$$
